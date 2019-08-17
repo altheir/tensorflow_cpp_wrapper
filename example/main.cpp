@@ -69,6 +69,7 @@ tensorflow::Tensor ReadFileIntoTensor(const std::string& filename) {
 
 /**
  * @brief SessionRun Convers the root scope graph and runs the inputs on that graph.
+ * @note To be used to perform operations on tensor altering graphs, rather than predictive graphs.
  * @param root scope to convert into a graph.
  * @param op_name which operation to use for the outputs.
  * @param inputs inpputs to run on the graph.
@@ -188,8 +189,8 @@ std::pair<int,float> maxcord(const std::vector<tensorflow::Tensor>& tensors){
     for (int i=0;i<flat_tensor.size();i++){
         vals.emplace_back(flat_tensor(i));
     }
-    auto maxy = std::max_element(vals.begin(),vals.end());
-    return {int(std::distance(vals.begin(),maxy)),*maxy};
+    auto max_element_location = std::max_element(vals.begin(),vals.end());
+    return {int(std::distance(vals.begin(),max_element_location)),*max_element_location};
 }
 
 /**
@@ -222,7 +223,7 @@ int main() {
     std::string input_layer = "input";
     std::string output_layer = "InceptionV3/Predictions/Reshape_1";
     std::string root_dir = "";
-    LoadedGraph sessy(std::move(graph));
+    LoadedGraph graph_session{graph};
 
     // Get the image from disk as a float array of numbers, resized and normalized
     // to the specifications the main graph expects.
@@ -233,7 +234,7 @@ int main() {
     const tensorflow::Tensor& resized_tensor = resized_tensors[0];
 
     // Actually run the image through the model.
-    std::vector<tensorflow::Tensor> outputs= sessy.run(input_layer,output_layer,resized_tensor);
+    std::vector<tensorflow::Tensor> outputs= graph_session.run(input_layer,output_layer,resized_tensor);
     //highest val should be 653
     std::cout<<"Class: "<<maxcord(outputs).first<<"\nConfidence: "<<maxcord(outputs).second<<std::endl;
 
