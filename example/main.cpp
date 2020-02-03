@@ -213,16 +213,14 @@ private:
 };
 
 int main() {
-    std::string image = "/home/cameron/eclipse-workspace/tensorflow_cpp_wrapper/data/grace_hopper.jpg";
-    std::string graph =
-            "/home/cameron/eclipse-workspace/tensorflow_cpp_wrapper/data/inception_v3_2016_08_28_frozen.pb";
-    int input_width = 299;
-    int input_height = 299;
-    float input_mean = 0;
-    float input_std = 255;
-    std::string input_layer = "input";
-    std::string output_layer = "InceptionV3/Predictions/Reshape_1";
-    std::string root_dir = "";
+    const std::string image{""};
+    const std::string graph{""};
+    const int input_width{299};
+    const int input_height{299};
+    const float input_mean{0};
+    const float input_std{255};
+    const std::string input_layer{"input"};
+    const std::string output_layer{"InceptionV3/Predictions/Reshape_1"};
     LoadedGraph graph_session{graph};
 
     // Get the image from disk as a float array of numbers, resized and normalized
